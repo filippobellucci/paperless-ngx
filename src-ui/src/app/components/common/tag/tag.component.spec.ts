@@ -36,13 +36,25 @@ describe('TagComponent', () => {
     fixture.detectChanges()
   })
 
-  it('should create tag with background color', () => {
+  it('should expose tag colours as custom properties', () => {
+    component.tag.set({ ...tag, text_color: '#ffffff' })
+    fixture.detectChanges()
+    const style: CSSStyleDeclaration = fixture.debugElement.query(
+      By.css('span')
+    ).nativeElement.style
+    expect(style.getPropertyValue('--pngx-tag-color')).toEqual('#ff0000')
+    expect(style.getPropertyValue('--pngx-tag-text-color')).toEqual('#ffffff')
+  })
+
+  it('should expose tag colours on clickable badges', () => {
     component.tag.set(tag)
+    fixture.componentRef.setInput('clickable', true)
     fixture.detectChanges()
     expect(
-      fixture.debugElement.query(By.css('span')).nativeElement.style
-        .backgroundColor
-    ).toEqual('rgb(255, 0, 0)')
+      fixture.debugElement
+        .query(By.css('a.badge'))
+        .nativeElement.style.getPropertyValue('--pngx-tag-color')
+    ).toEqual('#ff0000')
   })
 
   it('should handle private tags', () => {

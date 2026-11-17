@@ -5,6 +5,13 @@ a, span {
     text-align: start;
 }
 
+// The colours come from the tag as custom properties so that theme presets can restyle the badge
+// (src/themes/_refined.scss).
+.badge:not(.private) {
+    background: var(--pngx-tag-color);
+    color: var(--pngx-tag-text-color);
+}
+
 .private {
     background-color: #000000;
     color: #ffffff;

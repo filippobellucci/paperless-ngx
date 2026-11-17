@@ -4,10 +4,10 @@
       &nbsp;&gt;&nbsp;
   }
   @if (!clickable()) {
-    <span class="badge" [style.background]="tag().color" [style.color]="tag().text_color">{{tag().name}}</span>
+    <span class="badge" [style.--pngx-tag-color]="tag().color" [style.--pngx-tag-text-color]="tag().text_color">{{tag().name}}</span>
   }
   @if (clickable()) {
-    <a [title]="linkTitle()" class="badge" [style.background]="tag().color" [style.color]="tag().text_color">{{tag().name}}</a>
+    <a [title]="linkTitle()" class="badge" [style.--pngx-tag-color]="tag().color" [style.--pngx-tag-text-color]="tag().text_color">{{tag().name}}</a>
   }
 } @else if (loading) {
   <span class="placeholder-glow">

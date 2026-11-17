@@ -336,6 +336,33 @@ $scope: ':root:not([data-pngx-theme="classic"])';
     border-radius: var(--pngx-radius-pill);
   }
 
+  // Tags: a pill tinted with the tag colour and a dot in the full colour. The text mixes the tag colour
+  // into the body text colour, so it stays readable for very light and very dark tag colours in both modes.
+  // The thin rings keep the pill and the dot visible when the tag colour is close to the surface (white tags
+  // in light mode, black tags in dark mode).
+  pngx-tag .badge {
+    border-radius: var(--pngx-radius-pill);
+    padding: 0.3em 0.65em;
+  }
+
+  pngx-tag .badge:not(.private) {
+    background: color-mix(in srgb, var(--pngx-tag-color) 14%, var(--pngx-surface));
+    color: color-mix(in srgb, var(--pngx-tag-color) 35%, var(--bs-body-color));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pngx-tag-color) 25%, var(--bs-border-color));
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 0.5em;
+      height: 0.5em;
+      margin-right: 0.4em;
+      border-radius: 50%;
+      background: var(--pngx-tag-color);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--pngx-tag-color) 70%, var(--bs-body-color));
+      vertical-align: 0.08em;
+    }
+  }
+
   .toast {
     border-radius: var(--bs-border-radius-lg);
   }
