@@ -45,3 +45,47 @@ test('should apply appearance changes when set', async ({ page }) => {
   await page.getByLabel('Enable dark mode').click()
   await expect(page.locator('html')).toHaveAttribute('data-bs-theme', /dark/)
 })
+
+test('should preview, save and restore the theme preset', async ({ page }) => {
+  // Navigation bar colour in light mode per preset: the other presets use their own bar colour,
+  // Classic keeps the user's Theme Color (#9fbf2f in the e2e backend's seed).
+  const presets = [
+    { name: 'Classic', id: 'classic', navbar: 'rgb(159, 191, 47)' },
+    { name: 'Slate', id: 'slate', navbar: 'rgb(20, 32, 51)' },
+    { name: 'Paper', id: 'paper', navbar: 'rgb(245, 241, 232)' },
+    { name: 'High contrast', id: 'contrast', navbar: 'rgb(0, 0, 0)' },
+    { name: 'Refined', id: 'refined', navbar: 'rgb(255, 255, 255)' },
+  ]
+  const html = page.locator('html')
+  const navbar = page.locator('nav.navbar')
+  const save = page.getByRole('button', { name: 'Save' })
+
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.goto('/settings')
+  await expect(html).toHaveAttribute('data-pngx-theme', 'refined')
+
+  for (const preset of presets) {
+    await page
+      .getByRole('radio', { name: new RegExp(`^${preset.name}`) })
+      .click()
+    await expect(html).toHaveAttribute('data-pngx-theme', preset.id)
+    await expect(navbar).toHaveCSS('background-color', preset.navbar)
+  }
+
+  await page.getByRole('radio', { name: /^Slate/ }).click()
+  await save.scrollIntoViewIfNeeded()
+  await save.click()
+  await expect(save).toBeDisabled()
+  await page.reload()
+  await expect(html).toHaveAttribute('data-pngx-theme', 'slate')
+  await expect(page.getByRole('radio', { name: /^Slate/ })).toHaveAttribute(
+    'aria-checked',
+    'true'
+  )
+
+  // Restore the default so other tests see the stock look.
+  await page.getByRole('radio', { name: /^Refined/ }).click()
+  await save.scrollIntoViewIfNeeded()
+  await save.click()
+  await expect(save).toBeDisabled()
+})

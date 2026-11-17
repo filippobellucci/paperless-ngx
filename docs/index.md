@@ -101,6 +101,11 @@ Of course, Paperless-ngx also supports dark mode:
 
 ![image](assets/screenshots/documents-smallcards-dark.png)
 
+Each user can also pick a theme in **Settings** → **General** → **Appearance**: _Refined_ (the default), _Classic_
+(the original Paperless-ngx look), _Slate_, _Paper_ or _High contrast_. A theme sets the fonts, colors,
+icons and shapes of the interface. Dark mode and the _Theme Color_ setting apply on top of it: every theme
+has a light and a dark variant, and a theme color, when set, replaces the theme's main color.
+
 <div class="clear"></div>
 
 <div class="grid-left" markdown>
