@@ -24,10 +24,13 @@ import { DEFAULT_DISPLAY_FIELDS, DisplayField } from '../data/document'
 import { RemoteOCRModeConfig } from '../data/paperless-config'
 import { SavedView } from '../data/saved-view'
 import {
+  DEFAULT_THEME_PRESET,
   HideableSidebarItemID,
   PAPERLESS_GREEN_HEX,
   SETTINGS,
   SETTINGS_KEYS,
+  THEME_PRESETS,
+  ThemePreset,
   UiSettings,
 } from '../data/ui-settings'
 import { User } from '../data/user'
@@ -314,6 +317,9 @@ export class SettingsService {
   readonly globalDropzoneEnabled = signal(true)
   readonly globalDropzoneActive = signal(false)
   readonly organizingSidebarSavedViews = signal(false)
+  private readonly _themePreset = signal<ThemePreset>(DEFAULT_THEME_PRESET)
+  /** Theme preset currently applied to the page (see `updateAppearanceSettings`). */
+  readonly themePreset = this._themePreset.asReadonly()
   readonly sidebarHiddenItemsEditing = signal<HideableSidebarItemID[] | null>(
     null
   )
@@ -460,11 +466,25 @@ export class SettingsService {
   public updateAppearanceSettings(
     darkModeUseSystem = null,
     darkModeEnabled = null,
-    themeColor = null
+    themeColor = null,
+    themePreset: string = null
   ): void {
     darkModeUseSystem ??= this.get(SETTINGS_KEYS.DARK_MODE_USE_SYSTEM)
     darkModeEnabled ??= this.get(SETTINGS_KEYS.DARK_MODE_ENABLED)
     themeColor ??= this.get(SETTINGS_KEYS.THEME_COLOR)
+    themePreset ??= this.get(SETTINGS_KEYS.THEME_PRESET)
+
+    const preset: ThemePreset = THEME_PRESETS.includes(
+      themePreset as ThemePreset
+    )
+      ? (themePreset as ThemePreset)
+      : DEFAULT_THEME_PRESET
+    this._renderer.setAttribute(
+      this.document.documentElement,
+      'data-pngx-theme',
+      preset
+    )
+    this._themePreset.set(preset)
 
     if (darkModeUseSystem) {
       this._renderer.setAttribute(

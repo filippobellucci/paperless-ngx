@@ -327,6 +327,41 @@ describe('SettingsService', () => {
     )
   })
 
+  it('applies the theme preset to the document', () => {
+    httpTestingController
+      .expectOne(`${environment.apiBaseUrl}ui_settings/`)
+      .flush(ui_settings)
+    const setAttributeSpy = jest.spyOn(settingsService.renderer, 'setAttribute')
+
+    settingsService.updateAppearanceSettings(null, null, '')
+    expect(setAttributeSpy).toHaveBeenCalledWith(
+      document.documentElement,
+      'data-pngx-theme',
+      'refined'
+    )
+    expect(settingsService.themePreset()).toEqual('refined')
+
+    settingsService.updateAppearanceSettings(null, null, '', 'slate')
+    expect(setAttributeSpy).toHaveBeenCalledWith(
+      document.documentElement,
+      'data-pngx-theme',
+      'slate'
+    )
+    expect(settingsService.themePreset()).toEqual('slate')
+
+    settingsService.set(SETTINGS_KEYS.THEME_PRESET, 'paper')
+    settingsService.updateAppearanceSettings(null, null, '')
+    expect(settingsService.themePreset()).toEqual('paper')
+
+    settingsService.updateAppearanceSettings(null, null, '', 'unknown')
+    expect(setAttributeSpy).toHaveBeenCalledWith(
+      document.documentElement,
+      'data-pngx-theme',
+      'refined'
+    )
+    expect(settingsService.themePreset()).toEqual('refined')
+  })
+
   it('updates appearance settings', () => {
     const req = httpTestingController.expectOne(
       `${environment.apiBaseUrl}ui_settings/`

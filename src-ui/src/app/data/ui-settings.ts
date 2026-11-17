@@ -43,6 +43,18 @@ export const HIDEABLE_SIDEBAR_ITEM_IDS = Object.values(HideableSidebarItemID)
 
 export const PAPERLESS_GREEN_HEX = '#17541f'
 
+export const THEME_PRESETS = [
+  'refined',
+  'classic',
+  'slate',
+  'paper',
+  'contrast',
+] as const
+
+export type ThemePreset = (typeof THEME_PRESETS)[number]
+
+export const DEFAULT_THEME_PRESET: ThemePreset = 'refined'
+
 export const SETTINGS_KEYS = {
   VERSION: 'version',
   LANGUAGE: 'language',
@@ -57,6 +69,7 @@ export const SETTINGS_KEYS = {
   DARK_MODE_ENABLED: 'general-settings:dark-mode:enabled',
   DARK_MODE_THUMB_INVERTED: 'general-settings:dark-mode:thumb-inverted',
   THEME_COLOR: 'general-settings:theme:color',
+  THEME_PRESET: 'general-settings:theme:preset',
   USE_NATIVE_PDF_VIEWER: 'general-settings:document-details:native-pdf-viewer',
   PDF_VIEWER_ZOOM_SETTING:
     'general-settings:document-details:pdf-viewer-zoom-setting',
@@ -177,6 +190,11 @@ export const SETTINGS: UiSetting[] = [
     key: SETTINGS_KEYS.THEME_COLOR,
     type: 'string',
     default: '',
+  },
+  {
+    key: SETTINGS_KEYS.THEME_PRESET,
+    type: 'string',
+    default: DEFAULT_THEME_PRESET,
   },
   {
     key: SETTINGS_KEYS.USE_NATIVE_PDF_VIEWER,
