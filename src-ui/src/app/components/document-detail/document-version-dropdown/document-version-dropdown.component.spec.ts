@@ -74,6 +74,7 @@ describe('DocumentVersionDropdownComponent', () => {
           provide: SettingsService,
           useValue: {
             get: () => null,
+            themePreset: () => 'classic',
           },
         },
         {

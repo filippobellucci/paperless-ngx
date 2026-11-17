@@ -65,6 +65,7 @@ describe('PermissionsFilterDropdownComponent', () => {
             currentUser: () => ({
               id: currentUserID,
             }),
+            themePreset: () => 'classic',
           },
         },
         provideHttpClient(withInterceptorsFromDi()),

@@ -394,3 +394,8 @@ $scope: ':root:not([data-pngx-theme="classic"])';
     letter-spacing: -0.01em;
   }
 }
+
+// Lucide line icons (pngx-bs-icon) use a slightly lighter stroke than their default 2 px.
+#{$scope} svg.lucide {
+  stroke-width: 1.75;
+}

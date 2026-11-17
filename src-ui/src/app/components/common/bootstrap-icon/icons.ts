@@ -157,7 +157,8 @@ import x from 'bootstrap-icons/icons/x.svg'
 
 /**
  * `<pngx-bs-icon>`. Only icons registered here are bundled but can add
- * new ones (any icon from the bootstrap-icons package) as needed.
+ * new ones (any icon from the bootstrap-icons package) as needed; add the
+ * matching Lucide icon to `./icons-line.ts` too.
  */
 export const icons: Record<string, string> = {
   airplane,
