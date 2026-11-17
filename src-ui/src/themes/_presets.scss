@@ -1,0 +1,148 @@
+// Theme presets (Settings > General > Theme), applied through `data-pngx-theme` on <html>
+// (see SettingsService.updateAppearanceSettings). Each preset is a set of design tokens with light and dark
+// values; dark mode and the user's Theme Color work on top of it, as they do with the default look.
+// The default `refined` preset also applies before the setting is known (no attribute yet).
+// `classic` defines nothing: it is the stock Paperless-ngx look from theme.scss.
+// Values mirror design/mockups/restyle/themes.js.
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+
+$font-system: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-inter: "Inter Variable", #{$font-system};
+$font-jakarta: "Plus Jakarta Sans Variable", #{$font-system};
+$font-instrument: "Instrument Sans Variable", #{$font-system};
+$font-fraunces: "Fraunces Variable", Georgia, "Times New Roman", serif;
+
+// Per preset: fonts, radii (card, small, control, pill), optional font size, light and dark colours.
+// Colours: bg = page, side = sidebar, surface = cards and menus, fg = text, muted = secondary text,
+// line = borders, primary = main colour, on-primary = text on it, top / on-top = navigation bar.
+$presets: (
+  refined: (
+    font: $font-inter,
+    head: $font-inter,
+    radius: (12px, 8px, 10px, 999px),
+    light: (bg: #f6f7f6, side: #f6f7f6, surface: #ffffff, fg: #17201b, muted: #5f6b65, line: #e3e7e4, primary: #1d6b45, on-primary: #ffffff, top: #ffffff, on-top: #17201b),
+    dark: (bg: #0f1412, side: #0f1412, surface: #171d1a, fg: #e5ebe7, muted: #98a59e, line: #26302b, primary: #4cc28a, on-primary: #0b1a12, top: #121916, on-top: #e5ebe7),
+  ),
+  slate: (
+    font: $font-jakarta,
+    head: $font-jakarta,
+    radius: (10px, 6px, 8px, 8px),
+    light: (bg: #f3f5f8, side: #f3f5f8, surface: #ffffff, fg: #142033, muted: #5a6577, line: #dfe4ec, primary: #0e6e8c, on-primary: #ffffff, top: #142033, on-top: #e8edf5),
+    dark: (bg: #0d131c, side: #0d131c, surface: #151d29, fg: #e3e9f2, muted: #8f9bad, line: #243041, primary: #4fb3d3, on-primary: #06202a, top: #0a0f16, on-top: #e3e9f2),
+  ),
+  paper: (
+    font: $font-instrument,
+    head: $font-fraunces,
+    radius: (6px, 4px, 6px, 6px),
+    light: (bg: #f5f1e8, side: #f5f1e8, surface: #fffdf8, fg: #2a241c, muted: #6f6556, line: #e6dece, primary: #a8481f, on-primary: #ffffff, top: #f5f1e8, on-top: #2a241c),
+    dark: (bg: #1a1714, side: #1a1714, surface: #23201b, fg: #ece4d6, muted: #a59985, line: #3a342b, primary: #e08a5f, on-primary: #24150c, top: #1a1714, on-top: #ece4d6),
+  ),
+  contrast: (
+    font: $font-inter,
+    head: $font-inter,
+    radius: (8px, 6px, 8px, 8px),
+    font-size: 1.0625rem,
+    light: (bg: #ffffff, side: #ffffff, surface: #ffffff, fg: #000000, muted: #3b3b3b, line: #6b6b6b, primary: #0039a6, on-primary: #ffffff, top: #000000, on-top: #ffffff),
+    dark: (bg: #000000, side: #000000, surface: #0d0d0d, fg: #ffffff, muted: #d0d0d0, line: #9a9a9a, primary: #8ab4ff, on-primary: #000000, top: #000000, on-top: #ffffff),
+  ),
+);
+
+@function rgb-list($c) {
+  @return color.channel($c, "red", $space: rgb), color.channel($c, "green", $space: rgb), color.channel($c, "blue", $space: rgb);
+}
+
+// The main colour as the H, S and L parts theme.scss composes --bs-primary and its shades from.
+@mixin primary($c) {
+  --pngx-primary: #{color.channel($c, "hue", $space: hsl)}, #{color.channel($c, "saturation", $space: hsl)};
+  --pngx-primary-lightness: #{color.channel($c, "lightness", $space: hsl)};
+  --bs-primary: hsl(var(--pngx-primary), var(--pngx-primary-lightness));
+}
+
+@mixin colors($c) {
+  --bs-body-bg: #{map.get($c, bg)};
+  --bs-body-bg-rgb: #{rgb-list(map.get($c, bg))};
+  --bs-body-color: #{map.get($c, fg)};
+  --bs-body-color-rgb: #{rgb-list(map.get($c, fg))};
+  --bs-emphasis-color: #{map.get($c, fg)};
+  --bs-secondary-color: #{map.get($c, muted)};
+  --bs-border-color: #{map.get($c, line)};
+  --pngx-bg-alt: #{map.get($c, surface)};
+  --pngx-surface: #{map.get($c, surface)};
+  --pngx-sidebar-bg: #{map.get($c, side)};
+  --pngx-navbar-bg: #{map.get($c, top)};
+  --pngx-navbar-color: #{map.get($c, on-top)};
+  --pngx-primary-text-contrast: #{map.get($c, on-primary)};
+}
+
+@mixin static($p) {
+  $r: map.get($p, radius);
+  --bs-body-font-family: #{map.get($p, font)};
+  --pngx-heading-font-family: #{map.get($p, head)};
+  --bs-border-radius-lg: #{list.nth($r, 1)};
+  --bs-border-radius: #{list.nth($r, 3)};
+  --bs-border-radius-sm: #{list.nth($r, 2)};
+  --pngx-radius-control: #{list.nth($r, 3)};
+  --pngx-radius-pill: #{list.nth($r, 4)};
+  @if map.has-key($p, font-size) {
+    --bs-body-font-size: #{map.get($p, font-size)};
+  }
+}
+
+@mixin preset($name, $p) {
+  $light: map.get($p, light);
+  $dark: map.get($p, dark);
+  $roots: (':root[data-pngx-theme="#{$name}"]',);
+  @if $name == refined {
+    $roots: list.append($roots, ":root:not([data-pngx-theme])", $separator: comma);
+  }
+  $sel: list.join($roots, (), $separator: comma);
+
+  #{$sel} {
+    @include static($p);
+    @include colors($light);
+    @include primary(map.get($light, primary));
+  }
+
+  // Dark: on <html> and on <body>, because theme.scss sets its dark tokens on both (body for "auto").
+  // The :not(.primary-*) guard leaves the user's Theme Color in charge when one is set.
+  @each $mode in (dark, auto) {
+    $dark-sel: ();
+    $primary-sel: ();
+    @each $r in $roots {
+      $m: '#{$r}[data-bs-theme="#{$mode}"]';
+      $dark-sel: list.join($dark-sel, ($m, "#{$m} body"), $separator: comma);
+      $primary-sel: list.append($primary-sel, "#{$m} body:not(.primary-light):not(.primary-dark)", $separator: comma);
+    }
+    @if $mode == dark {
+      #{$dark-sel} {
+        @include colors($dark);
+      }
+      #{$primary-sel} {
+        @include primary(map.get($dark, primary));
+      }
+    } @else {
+      @media (prefers-color-scheme: dark) {
+        #{$dark-sel} {
+          @include colors($dark);
+        }
+        #{$primary-sel} {
+          @include primary(map.get($dark, primary));
+        }
+      }
+    }
+  }
+}
+
+@each $name, $p in $presets {
+  @include preset($name, $p);
+}
+
+// Headings take the preset's heading font (the body font unless a preset sets another).
+:root:not([data-pngx-theme="classic"]) {
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--pngx-heading-font-family, inherit);
+  }
+}

@@ -11,6 +11,11 @@ $form-file-button-hover-bg: var(--pngx-bg-alt);
 @include meta.load-css("theme");
 @import "@ng-select/ng-select/themes/default.theme.css";
 @include meta.load-css("print");
+// Fonts of the theme presets (src/themes/), self-hosted; each face downloads only when a preset uses it.
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/plus-jakarta-sans/wght.css";
+@import "@fontsource-variable/instrument-sans/wght.css";
+@import "@fontsource-variable/fraunces/wght.css";
 
 // re-created bootstrap styles
 .mt-n2 {
@@ -930,3 +935,6 @@ canvas.hiddenCanvasElement {
     display: block;
   }
 }
+
+// Theme presets (Settings > General > Theme).
+@include meta.load-css("themes/index");
