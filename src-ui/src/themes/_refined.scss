@@ -1,0 +1,369 @@
+// The "Refined" visual language shared by every preset except Classic (design/mockups/restyle/style.css):
+// light or preset-coloured navigation bar, pill navigation, borderless cards with soft elevation,
+// quiet table headers, segmented controls. Colours, fonts and radii come from the preset tokens
+// (_presets.scss); Classic keeps the stock look because every rule is scoped to the other presets.
+
+$scope: ':root:not([data-pngx-theme="classic"])';
+
+#{$scope} {
+  body {
+    --pngx-body-font-size: var(--pngx-font-size, 0.90625rem); // 14.5 px
+  }
+
+  h1, .h1, pngx-page-header h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  // Navigation bar: flat, with a hairline under it instead of a drop shadow.
+  .navbar.bg-primary {
+    box-shadow: 0 1px 0 var(--bs-border-color) !important;
+  }
+
+  // Global search: a pill on the navigation bar.
+  pngx-global-search form .form-control {
+    border-radius: var(--pngx-radius-pill);
+    background-color: rgba(var(--pngx-navbar-overlay-rgb), 0.06);
+    border-color: rgba(var(--pngx-navbar-overlay-rgb), 0.16);
+    padding-left: 2.1rem;
+
+    &:focus-within {
+      background-color: rgba(var(--pngx-navbar-overlay-rgb), 0.1);
+      padding-left: 0.9rem;
+    }
+  }
+
+  pngx-global-search form > pngx-bs-icon[name="search"] {
+    left: 0.85rem;
+  }
+
+  pngx-global-search form .input-group:has(.btn) .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  pngx-global-search form .input-group .btn {
+    border-radius: 0 var(--pngx-radius-pill) var(--pngx-radius-pill) 0;
+  }
+
+  // Upload: a primary pill.
+  .header-upload-group {
+    border-radius: var(--pngx-radius-pill);
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  .header-upload {
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-hover-bg: var(--pngx-primary-darken-5);
+    --bs-btn-active-bg: var(--pngx-primary-darken-5);
+    color: var(--pngx-primary-text-contrast) !important;
+    font-weight: 600;
+    padding-inline: 0.9rem !important;
+
+    & + .header-upload {
+      border-left-color: rgba(var(--pngx-surface-rgb), 0.3) !important;
+    }
+  }
+
+  // Sidebar: same colour as the page, no border; items are pills, the active one is lifted onto the surface.
+  // The id outweighs the sidebar's component styles.
+  #sidebarMenu {
+    background-color: var(--pngx-sidebar-bg) !important;
+    border-right-color: transparent;
+  }
+
+  #sidebarMenu .nav-link {
+    border-radius: var(--pngx-radius-control);
+    color: var(--bs-body-color);
+
+    pngx-bs-icon {
+      color: var(--bs-secondary-color);
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--bs-body-color);
+      background-color: var(--pngx-surface);
+    }
+
+    &.active {
+      color: var(--bs-primary);
+      background-color: var(--pngx-surface);
+      box-shadow: var(--pngx-shadow-card);
+
+      pngx-bs-icon {
+        color: var(--bs-primary);
+      }
+    }
+
+    &.nav-link-action:hover,
+    &.nav-link-action:focus {
+      box-shadow: none;
+    }
+  }
+
+  #sidebarMenu .attributes-row {
+    border-radius: var(--pngx-radius-control);
+
+    &:hover,
+    &:has(> .nav-link:focus-visible) {
+      background-color: var(--pngx-surface);
+    }
+
+    &:has(> .nav-link.active) {
+      background-color: var(--pngx-surface);
+      box-shadow: var(--pngx-shadow-card);
+    }
+
+    > .nav-link.active {
+      box-shadow: none;
+    }
+  }
+
+  #sidebarMenu .sidebar-heading {
+    font-size: 0.65625rem; // 10.5 px
+    letter-spacing: 0.09em;
+    font-weight: 600;
+    opacity: 1;
+  }
+
+  // Cards: no border, soft elevation; "bg-light" areas inside a card are the card's surface.
+  .card {
+    --bs-card-border-color: transparent;
+    --bs-card-border-radius: var(--bs-border-radius-lg);
+    --bs-card-inner-border-radius: calc(var(--bs-border-radius-lg) - 1px);
+    --bs-light-rgb: var(--pngx-surface-rgb);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--pngx-shadow-card);
+    background-color: var(--pngx-surface);
+  }
+
+  .card.shadow-sm {
+    box-shadow: var(--pngx-shadow-card) !important;
+  }
+
+  .card-header,
+  .card-footer {
+    background-color: transparent;
+    border-color: var(--bs-border-color);
+  }
+
+  .doc-img-container {
+    background-color: var(--pngx-bg-darker);
+  }
+
+  .card-selected {
+    box-shadow: 0 0 0 2px var(--bs-primary), var(--pngx-shadow-card) !important;
+  }
+
+  .dropdown-menu,
+  .popover,
+  .modal-content {
+    --bs-dropdown-border-color: var(--bs-border-color);
+    --bs-dropdown-border-radius: var(--bs-border-radius-lg);
+    --bs-dropdown-link-active-bg: var(--bs-primary);
+    border-radius: var(--bs-border-radius-lg);
+  }
+
+  .dropdown-menu .dropdown-item {
+    border-radius: var(--bs-border-radius-sm);
+  }
+
+  .dropdown-menu:has(> .dropdown-item) {
+    padding-inline: 0.375rem;
+  }
+
+  // Tables: quiet uppercase header, hover in the page colour, selected row tinted with the main colour.
+  .table {
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: var(--pngx-bg-darker);
+    --bs-table-hover-color: var(--bs-body-color);
+    --bs-table-border-color: var(--bs-border-color);
+
+    > thead th {
+      font-size: 0.6875rem; // 11 px
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      color: var(--bs-secondary-color);
+    }
+  }
+
+  table.table-hover > tbody > tr:hover > * {
+    background-color: var(--pngx-bg-darker);
+    color: var(--bs-body-color);
+  }
+
+  .table.border {
+    border-color: transparent !important;
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--pngx-shadow-card) !important;
+    background-color: var(--pngx-surface);
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  // Titles and other links in tables read as text; the main colour shows on hover.
+  .table a:not(.btn):not(.badge) {
+    color: var(--bs-body-color);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      color: var(--bs-primary);
+    }
+  }
+
+  .table-row-selected > * {
+    background-color: color-mix(in srgb, var(--bs-primary) 14%, var(--pngx-surface)) !important;
+  }
+
+  .table-row-selected {
+    td,
+    a:not(.badge) {
+      color: var(--bs-body-color) !important;
+    }
+  }
+
+  // Controls: preset radius on buttons and inputs, semibold buttons.
+  .btn,
+  .form-control,
+  .form-select,
+  .input-group-text,
+  .ng-select .ng-select-container {
+    --bs-border-radius: var(--pngx-radius-control);
+    --bs-border-radius-sm: var(--pngx-radius-control);
+  }
+
+  .btn {
+    font-weight: 600;
+  }
+
+  .ng-select .ng-select-container {
+    border-radius: var(--pngx-radius-control);
+  }
+
+  .form-control:focus,
+  .form-select:focus,
+  .form-check-input:focus,
+  .ng-select.ng-select-focused > .ng-select-container {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--bs-primary) 22%, transparent) !important;
+  }
+
+  .pagination {
+    --bs-pagination-border-radius: var(--pngx-radius-control);
+    --bs-border-radius-sm: var(--pngx-radius-control);
+  }
+
+  // Toggle groups (radio buttons styled as buttons, e.g. the document list's display mode) and tab bars
+  // become segmented controls: a sunken track with the selected item lifted onto the surface.
+  .btn-group:has(> .btn-check) {
+    background-color: var(--pngx-bg-darker);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--pngx-radius-control);
+    padding: 2px;
+    gap: 2px;
+
+    > .btn {
+      --bs-btn-color: var(--bs-secondary-color);
+      --bs-btn-hover-color: var(--bs-body-color);
+      --bs-btn-hover-bg: transparent;
+      --bs-btn-active-color: var(--bs-primary);
+      --bs-btn-active-bg: var(--pngx-surface);
+      border: 0;
+      border-radius: calc(var(--pngx-radius-control) - 2px) !important;
+      background-color: transparent !important; // over .btn-outline-primary's filled hover in styles.scss
+      color: var(--bs-secondary-color) !important;
+
+      &:hover {
+        color: var(--bs-body-color) !important;
+      }
+    }
+
+    > .btn-check:checked + .btn {
+      background-color: var(--pngx-surface) !important;
+      color: var(--bs-primary) !important;
+      box-shadow: var(--pngx-shadow-card);
+    }
+
+    > .btn-check:focus-visible + .btn {
+      outline: 2px solid var(--bs-primary);
+      outline-offset: 1px;
+    }
+  }
+
+  .nav-tabs {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    gap: 4px;
+    padding: 4px;
+    border: 0;
+    border-radius: var(--bs-border-radius-lg);
+    background-color: var(--pngx-bg-darker);
+    overflow-x: auto;
+
+    .nav-link {
+      border: 0 !important;
+      border-radius: var(--pngx-radius-control);
+      color: var(--bs-secondary-color);
+      font-weight: 600;
+      white-space: nowrap;
+      margin: 0;
+
+      &:hover {
+        background-color: transparent;
+        color: var(--bs-body-color);
+      }
+
+      &.active {
+        background-color: var(--pngx-surface);
+        color: var(--bs-body-color);
+        box-shadow: var(--pngx-shadow-card);
+      }
+    }
+  }
+
+  .nav-underline .nav-link {
+    font-weight: 600;
+  }
+
+  .badge.rounded-pill,
+  .badge.bg-info {
+    border-radius: var(--pngx-radius-pill);
+  }
+
+  .toast {
+    border-radius: var(--bs-border-radius-lg);
+  }
+}
+
+// High contrast: links are underlined, borders and the focus ring are thicker.
+:root[data-pngx-theme="contrast"] {
+  --bs-border-width: 1.5px;
+
+  main a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item) {
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--bs-primary) !important;
+    outline-offset: 2px;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    box-shadow: 0 0 0 3px var(--bs-primary) !important;
+  }
+}
+
+// Paper: a lighter weight for the serif page titles.
+:root[data-pngx-theme="paper"] {
+  h1, .h1, pngx-page-header h3 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}

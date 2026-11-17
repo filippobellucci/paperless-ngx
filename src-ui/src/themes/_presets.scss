@@ -43,9 +43,9 @@ $presets: (
     font: $font-inter,
     head: $font-inter,
     radius: (8px, 6px, 8px, 8px),
-    font-size: 1.0625rem,
-    light: (bg: #ffffff, side: #ffffff, surface: #ffffff, fg: #000000, muted: #3b3b3b, line: #6b6b6b, primary: #0039a6, on-primary: #ffffff, top: #000000, on-top: #ffffff),
-    dark: (bg: #000000, side: #000000, surface: #0d0d0d, fg: #ffffff, muted: #d0d0d0, line: #9a9a9a, primary: #8ab4ff, on-primary: #000000, top: #000000, on-top: #ffffff),
+    font-size: 0.96875rem,
+    light: (bg: #ffffff, side: #ffffff, surface: #ffffff, fg: #000000, muted: #3b3b3b, line: #6b6b6b, primary: #0039a6, on-primary: #ffffff, top: #000000, on-top: #ffffff, shadow: 0 0 0 1.5px #6b6b6b),
+    dark: (bg: #000000, side: #000000, surface: #0d0d0d, fg: #ffffff, muted: #d0d0d0, line: #9a9a9a, primary: #8ab4ff, on-primary: #000000, top: #000000, on-top: #ffffff, shadow: 0 0 0 1.5px #9a9a9a),
   ),
 );
 
@@ -60,9 +60,28 @@ $presets: (
   --bs-primary: hsl(var(--pngx-primary), var(--pngx-primary-lightness));
 }
 
-@mixin colors($c) {
-  --bs-body-bg: #{map.get($c, bg)};
-  --bs-body-bg-rgb: #{rgb-list(map.get($c, bg))};
+// Card shadow when a preset sets none: soft elevation, stronger on dark surfaces.
+$shadow-light: 0 1px 2px rgba(16, 32, 24, 0.05), 0 6px 20px rgba(16, 32, 24, 0.06);
+$shadow-dark: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
+
+// $mode: light or dark, for the default shadow.
+@mixin colors($c, $mode) {
+  // Bootstrap's body background is what cards, inputs, menus and modals are drawn on: the preset's surface.
+  // The page behind them (main area, hover rows) is --pngx-bg-darker, as in theme.scss.
+  --bs-body-bg: #{map.get($c, surface)};
+  --bs-body-bg-rgb: #{rgb-list(map.get($c, surface))};
+  --pngx-bg-darker: #{map.get($c, bg)};
+  --bs-tertiary-bg: #{map.get($c, bg)};
+  --bs-light: #{map.get($c, bg)};
+  --bs-light-rgb: #{rgb-list(map.get($c, bg))};
+  --pngx-surface-rgb: #{rgb-list(map.get($c, surface))};
+  @if map.has-key($c, shadow) {
+    --pngx-shadow-card: #{map.get($c, shadow)};
+  } @else if $mode == dark {
+    --pngx-shadow-card: #{$shadow-dark};
+  } @else {
+    --pngx-shadow-card: #{$shadow-light};
+  }
   --bs-body-color: #{map.get($c, fg)};
   --bs-body-color-rgb: #{rgb-list(map.get($c, fg))};
   --bs-emphasis-color: #{map.get($c, fg)};
@@ -88,7 +107,7 @@ $presets: (
   --pngx-radius-control: #{list.nth($r, 3)};
   --pngx-radius-pill: #{list.nth($r, 4)};
   @if map.has-key($p, font-size) {
-    --bs-body-font-size: #{map.get($p, font-size)};
+    --pngx-font-size: #{map.get($p, font-size)};
   }
 }
 
@@ -103,7 +122,7 @@ $presets: (
 
   #{$sel} {
     @include static($p);
-    @include colors($light);
+    @include colors($light, light);
     @include primary(map.get($light, primary));
   }
 
@@ -115,11 +134,17 @@ $presets: (
     @each $r in $roots {
       $m: '#{$r}[data-bs-theme="#{$mode}"]';
       $dark-sel: list.join($dark-sel, ($m, "#{$m} body"), $separator: comma);
-      $primary-sel: list.append($primary-sel, "#{$m} body:not(.primary-light):not(.primary-dark)", $separator: comma);
+      // theme.scss gives the dark navigation bar the stock green; the preset's main colour applies there too.
+      $no-custom: "#{$m} body:not(.primary-light):not(.primary-dark)";
+      $primary-sel: list.join(
+        $primary-sel,
+        ($no-custom, "#{$no-custom} .navbar.bg-primary", "#{$no-custom} .navbar.bg-primary .dropdown-menu"),
+        $separator: comma
+      );
     }
     @if $mode == dark {
       #{$dark-sel} {
-        @include colors($dark);
+        @include colors($dark, dark);
       }
       #{$primary-sel} {
         @include primary(map.get($dark, primary));
@@ -127,7 +152,7 @@ $presets: (
     } @else {
       @media (prefers-color-scheme: dark) {
         #{$dark-sel} {
-          @include colors($dark);
+          @include colors($dark, dark);
         }
         #{$primary-sel} {
           @include primary(map.get($dark, primary));
@@ -190,7 +215,7 @@ $swatch-classic: (
 @each $name, $p in map.merge((classic: $swatch-classic), $presets) {
   $r: map.get($p, radius);
   .pngx-theme-swatch-#{$name} {
-    --swatch-font: #{if(map.has-key($p, head), map.get($p, head), map.get($p, font))};
+    --swatch-font: #{map.get($p, head) or map.get($p, font)};
     --swatch-radius: #{list.nth($r, 1)};
     --swatch-radius-sm: #{list.nth($r, 2)};
     --swatch-radius-pill: #{list.nth($r, 4)};
