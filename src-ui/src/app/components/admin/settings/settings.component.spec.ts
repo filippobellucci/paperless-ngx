@@ -44,6 +44,7 @@ import { ConfirmButtonComponent } from '../../common/confirm-button/confirm-butt
 import { ConfirmDialogComponent } from '../../common/confirm-dialog/confirm-dialog.component'
 import { CheckComponent } from '../../common/input/check/check.component'
 import { ColorComponent } from '../../common/input/color/color.component'
+import { ThemePickerComponent } from '../../common/input/theme-picker/theme-picker.component'
 import { DragDropSelectComponent } from '../../common/input/drag-drop-select/drag-drop-select.component'
 import { NumberComponent } from '../../common/input/number/number.component'
 import { PermissionsGroupComponent } from '../../common/input/permissions/permissions-group/permissions-group.component'
@@ -305,7 +306,7 @@ describe('SettingsComponent', () => {
     expect(toastErrorSpy).toHaveBeenCalled()
     expect(storeSpy).toHaveBeenCalled()
     expect(appearanceSettingsSpy).not.toHaveBeenCalled()
-    expect(setSpy).toHaveBeenCalledTimes(33)
+    expect(setSpy).toHaveBeenCalledTimes(34)
     expect(setSpy).toHaveBeenCalledWith(SETTINGS_KEYS.SIDEBAR_HIDDEN_ITEMS, [
       HideableSidebarItemID.Workflows,
     ])
@@ -355,6 +356,38 @@ describe('SettingsComponent', () => {
     expect(appearanceSpy).toHaveBeenCalled()
     expect(settingsService.get(SETTINGS_KEYS.THEME_COLOR)).toEqual('')
     component.clearThemeColor()
+  })
+
+  it('should preview a theme preset immediately, save it, and restore it when leaving unsaved', () => {
+    completeSetup()
+    const appearanceSpy = jest.spyOn(
+      settingsService,
+      'updateAppearanceSettings'
+    )
+    expect(component.settingsForm.get('themePreset').value).toEqual('refined')
+    const picker = fixture.debugElement.query(
+      By.directive(ThemePickerComponent)
+    )
+    picker.queryAll(By.css('[role=radio]'))[2].nativeElement.click()
+    expect(component.settingsForm.get('themePreset').value).toEqual('slate')
+    expect(appearanceSpy).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      'slate'
+    )
+    expect(settingsService.get(SETTINGS_KEYS.THEME_PRESET)).toEqual('refined')
+
+    // leaving without saving re-applies the stored settings
+    component.isDirty = true
+    appearanceSpy.mockClear()
+    component.ngOnDestroy()
+    expect(appearanceSpy).toHaveBeenCalledWith()
+
+    const setSpy = jest.spyOn(settingsService, 'set')
+    jest.spyOn(settingsService, 'storeSettings').mockReturnValue(of(true))
+    component.saveSettings()
+    expect(setSpy).toHaveBeenCalledWith(SETTINGS_KEYS.THEME_PRESET, 'slate')
   })
 
   it('should show errors on load if load users failure', () => {

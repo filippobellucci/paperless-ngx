@@ -66,6 +66,7 @@ import { SystemStatusService } from 'src/app/services/system-status.service'
 import { Toast, ToastLevel, ToastService } from 'src/app/services/toast.service'
 import { locationReload } from 'src/app/utils/navigation'
 import { CheckComponent } from '../../common/input/check/check.component'
+import { ThemePickerComponent } from '../../common/input/theme-picker/theme-picker.component'
 import { ColorComponent } from '../../common/input/color/color.component'
 import { PermissionsGroupComponent } from '../../common/input/permissions/permissions-group/permissions-group.component'
 import { PermissionsUserComponent } from '../../common/input/permissions/permissions-user/permissions-user.component'
@@ -125,6 +126,7 @@ const sidebarItemLabels: Record<HideableSidebarItemID, string> = {
     PageHeaderComponent,
     CheckComponent,
     ColorComponent,
+    ThemePickerComponent,
     SelectComponent,
     PermissionsGroupComponent,
     PermissionsUserComponent,
@@ -169,6 +171,7 @@ export class SettingsComponent
     darkModeEnabled: new FormControl(null),
     darkModeInvertThumbs: new FormControl(null),
     themeColor: new FormControl(null),
+    themePreset: new FormControl(null),
     displayLanguage: new FormControl(null),
     dateLocale: new FormControl(null),
     dateFormat: new FormControl(null),
@@ -353,6 +356,7 @@ export class SettingsComponent
         SETTINGS_KEYS.DARK_MODE_THUMB_INVERTED
       ),
       themeColor: this.settings.get(SETTINGS_KEYS.THEME_COLOR),
+      themePreset: this.settings.get(SETTINGS_KEYS.THEME_PRESET),
       useNativePdfViewer: this.settings.get(
         SETTINGS_KEYS.USE_NATIVE_PDF_VIEWER
       ),
@@ -461,7 +465,8 @@ export class SettingsComponent
         this.settings.updateAppearanceSettings(
           this.settingsForm.get('darkModeUseSystem').value,
           this.settingsForm.get('darkModeEnabled').value,
-          this.settingsForm.get('themeColor').value
+          this.settingsForm.get('themeColor').value,
+          this.settingsForm.get('themePreset').value
         )
       })
 
@@ -542,6 +547,10 @@ export class SettingsComponent
     this.settings.set(
       SETTINGS_KEYS.THEME_COLOR,
       this.settingsForm.value.themeColor
+    )
+    this.settings.set(
+      SETTINGS_KEYS.THEME_PRESET,
+      this.settingsForm.value.themePreset
     )
     this.settings.set(
       SETTINGS_KEYS.USE_NATIVE_PDF_VIEWER,

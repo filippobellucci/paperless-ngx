@@ -133,6 +133,15 @@
 
             <div class="row">
               <div class="col-md-3 col-form-label pt-0">
+                <span i18n>Theme</span>
+              </div>
+              <div class="col">
+                <pngx-theme-picker formControlName="themePreset" i18n-hint hint="Fonts, colors and shapes of the interface. Dark mode and the theme color below apply on top of it."></pngx-theme-picker>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 col-form-label pt-0">
                 <span i18n>Dark mode</span>
               </div>
               <div class="col">
@@ -147,7 +156,7 @@
                 <span i18n>Theme Color</span>
               </div>
               <div class="col col-md-4">
-                <pngx-input-color i18n-title formControlName="themeColor" [error]="error?.color"></pngx-input-color>
+                <pngx-input-color i18n-title formControlName="themeColor" [error]="error?.color" i18n-hint hint="Replaces the main color of the theme."></pngx-input-color>
               </div>
               <div class="col-2">
                 <button class="btn btn-link btn-sm pt-2 ps-0" [disabled]="!this.settingsForm.get('themeColor').value" (click)="clearThemeColor()">

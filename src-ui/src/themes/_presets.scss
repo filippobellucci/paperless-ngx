@@ -146,3 +146,39 @@ $presets: (
     font-family: var(--pngx-heading-font-family, inherit);
   }
 }
+
+// Swatches for the theme picker (pngx-theme-picker): each card previews its preset in the current mode.
+$swatch-classic: (
+  font: $font-system,
+  radius: (7px, 4px, 7px, 7px),
+  light: (bg: #ffffff, surface: #ffffff, fg: #212529, line: #ced4da, primary: #17541f, top: #17541f),
+  dark: (bg: #161618, surface: #1c1c1f, fg: #abb2bf, line: #34373d, primary: #227a2e, top: #17541f),
+);
+
+@mixin swatch-colors($c) {
+  --swatch-bg: #{map.get($c, bg)};
+  --swatch-surface: #{map.get($c, surface)};
+  --swatch-fg: #{map.get($c, fg)};
+  --swatch-line: #{map.get($c, line)};
+  --swatch-primary: #{map.get($c, primary)};
+  --swatch-top: #{map.get($c, top)};
+}
+
+@each $name, $p in map.merge((classic: $swatch-classic), $presets) {
+  $r: map.get($p, radius);
+  .pngx-theme-swatch-#{$name} {
+    --swatch-font: #{if(map.has-key($p, head), map.get($p, head), map.get($p, font))};
+    --swatch-radius: #{list.nth($r, 1)};
+    --swatch-radius-sm: #{list.nth($r, 2)};
+    --swatch-radius-pill: #{list.nth($r, 4)};
+    @include swatch-colors(map.get($p, light));
+  }
+  [data-bs-theme="dark"] .pngx-theme-swatch-#{$name} {
+    @include swatch-colors(map.get($p, dark));
+  }
+  @media (prefers-color-scheme: dark) {
+    [data-bs-theme="auto"] .pngx-theme-swatch-#{$name} {
+      @include swatch-colors(map.get($p, dark));
+    }
+  }
+}

@@ -1,0 +1,27 @@
+<div class="mb-3">
+  @if (title) {
+    <div class="form-label" [id]="inputId + '-label'">{{title}}</div>
+  }
+  <div class="theme-picker" role="radiogroup" [attr.aria-labelledby]="title ? inputId + '-label' : null" [attr.aria-disabled]="disabled || null">
+    @for (option of options; track option.id; let i = $index) {
+      <button type="button" role="radio" class="theme-card"
+        [class.active]="selected === option.id"
+        [attr.aria-checked]="selected === option.id"
+        [attr.tabindex]="selected === option.id ? 0 : -1"
+        [disabled]="disabled"
+        (click)="select(option.id)"
+        (keydown)="onKeydown($event, i)">
+        <span class="theme-swatch pngx-theme-swatch-{{option.id}}" aria-hidden="true">
+          <span class="theme-swatch-bar"></span>
+          <span class="theme-swatch-card"><span></span><span></span><span class="theme-swatch-button"></span></span>
+          <span class="theme-swatch-type">Aa</span>
+        </span>
+        <span class="theme-card-name">{{option.name}}</span>
+        <span class="theme-card-note">{{option.note}}</span>
+      </button>
+    }
+  </div>
+  @if (hint) {
+    <small class="form-text text-muted">{{hint}}</small>
+  }
+</div>
