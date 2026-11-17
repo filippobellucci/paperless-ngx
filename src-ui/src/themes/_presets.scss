@@ -73,6 +73,8 @@ $presets: (
   --pngx-sidebar-bg: #{map.get($c, side)};
   --pngx-navbar-bg: #{map.get($c, top)};
   --pngx-navbar-color: #{map.get($c, on-top)};
+  // Translucent layers on the navigation bar (search field, Upload button) are tinted with its text colour.
+  --pngx-navbar-overlay-rgb: #{rgb-list(map.get($c, on-top))};
   --pngx-primary-text-contrast: #{map.get($c, on-primary)};
 }
 
@@ -137,6 +139,27 @@ $presets: (
 
 @each $name, $p in $presets {
   @include preset($name, $p);
+}
+
+// The navigation bar takes the preset's colours instead of the main colour
+// (also over theme.scss's dark-mode rule that colours the search field with the main colour's contrast).
+:root:not([data-pngx-theme="classic"]) {
+  .navbar.bg-primary {
+    background-color: var(--pngx-navbar-bg) !important;
+    color: var(--pngx-navbar-color);
+  }
+
+  .search-container {
+    input,
+    input:focus,
+    pngx-bs-icon[name="search"] {
+      color: var(--pngx-navbar-color) !important;
+    }
+
+    ::placeholder {
+      color: rgba(var(--pngx-navbar-overlay-rgb), 0.6) !important;
+    }
+  }
 }
 
 // Headings take the preset's heading font (the body font unless a preset sets another).

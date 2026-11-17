@@ -186,11 +186,11 @@ table,
 }
 
 .navbar-brand {
-  color: var(--pngx-primary-text-contrast) !important;
+  color: var(--pngx-navbar-color, var(--pngx-primary-text-contrast)) !important;
 }
 
 .navbar .dropdown > .btn {
-  color: var(--pngx-primary-text-contrast) !important;
+  color: var(--pngx-navbar-color, var(--pngx-primary-text-contrast)) !important;
 }
 
 .btn-primary {

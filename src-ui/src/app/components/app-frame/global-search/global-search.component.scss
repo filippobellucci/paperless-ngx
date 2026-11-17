@@ -5,7 +5,7 @@ form {
     position: absolute;
     left: 0.6rem;
     top: .25rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), 0.6);
 
     @media screen and (min-width: 768px) {
       // adjust for smaller font size on non-mobile
@@ -20,7 +20,7 @@ form {
     }
 
     .form-control::placeholder {
-      color: rgba(255, 255, 255, 0);
+      color: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), 0);
     }
   }
 
@@ -29,8 +29,8 @@ form {
   }
 
   .input-group .btn {
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--pngx-primary-text-contrast);
+    border-color: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), 0.2);
+    color: var(--pngx-navbar-color, var(--pngx-primary-text-contrast));
     padding-top: .15rem;
     padding-bottom: .15rem;
     min-height: calc(1.3em + 0.5rem + calc(var(--bs-border-width) * 2)) !important;
@@ -38,23 +38,23 @@ form {
 
   .form-control {
     min-height: 2.25rem;
-    color: rgba(255, 255, 255, 0.55);
-    background-color: rgba(0, 0, 0, 0.16);
+    color: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), 0.55);
+    background-color: rgba(var(--pngx-navbar-shade-rgb, 0, 0, 0), 0.16);
     padding-left: 1.8rem;
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), 0.2);
     transition: all .3s ease, padding-left 0s ease, background-color 0s ease; // Safari requires all
     > input {
       outline: none;
-      color: var(--pngx-primary-text-contrast);
+      color: var(--pngx-navbar-color, var(--pngx-primary-text-contrast));
 
       &::placeholder {
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), 0.4);
       }
     }
 
     &:focus-within {
-      background-color: rgba(0, 0, 0, 0.26);
-      color: var(--bs-light);
+      background-color: rgba(var(--pngx-navbar-shade-rgb, 0, 0, 0), 0.26);
+      color: var(--pngx-navbar-color, var(--bs-light));
       flex-grow: 1;
       padding-left: 0.5rem;
     }

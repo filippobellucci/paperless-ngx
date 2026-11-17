@@ -479,11 +479,11 @@ main {
 
 :host ::ng-deep .navbar-official-logo {
   .leaf {
-    fill: color-mix(in srgb, var(--pngx-primary-text-contrast) 85%, var(--bs-primary)) !important;
+    fill: color-mix(in srgb, var(--pngx-navbar-color, var(--pngx-primary-text-contrast)) 85%, var(--bs-primary)) !important;
   }
 
   .text {
-    fill: var(--pngx-primary-text-contrast) !important;
+    fill: var(--pngx-navbar-color, var(--pngx-primary-text-contrast)) !important;
   }
 }
 
@@ -528,7 +528,7 @@ main {
 
   &:hover,
   &:focus-visible {
-    background-color: rgba(0, 0, 0, .14);
+    background-color: rgba(var(--pngx-navbar-shade-rgb, 0, 0, 0), .14);
   }
 }
 
@@ -547,13 +547,13 @@ main {
 
 // light w shadow to stand out against search
 .header-upload {
-  --bs-btn-bg: rgba(255, 255, 255, .15);
-  --bs-btn-hover-bg: rgba(255, 255, 255, .22);
-  --bs-btn-active-bg: rgba(255, 255, 255, .3);
-  color: var(--pngx-primary-text-contrast) !important; // .navbar .dropdown > .btn in styles.scss
+  --bs-btn-bg: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), .15);
+  --bs-btn-hover-bg: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), .22);
+  --bs-btn-active-bg: rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), .3);
+  color: var(--pngx-navbar-color, var(--pngx-primary-text-contrast)) !important; // .navbar .dropdown > .btn in styles.scss
 
   & + & {
-    border-left: 1px solid rgba(255, 255, 255, .2) !important;
+    border-left: 1px solid rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), .2) !important;
   }
 
   &:focus {
@@ -561,7 +561,7 @@ main {
   }
 
   &:focus-visible {
-    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5);
+    box-shadow: inset 0 0 0 2px rgba(var(--pngx-navbar-overlay-rgb, 255, 255, 255), .5);
   }
 }
 
@@ -581,7 +581,7 @@ main {
 
   .navbar-toggler {
     grid-area: toggler;
-    color: var(--pngx-primary-text-contrast);
+    color: var(--pngx-navbar-color, var(--pngx-primary-text-contrast));
     text-align: left;
   }
 
