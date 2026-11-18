@@ -46,7 +46,23 @@ test('should apply appearance changes when set', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-bs-theme', /dark/)
 })
 
-test('should preview, save and restore the theme preset', async ({ page }) => {
+test('should preview, save and reload the theme preset', async ({ page }) => {
+  // UI settings are stored as one object per user, shared with the tests running in parallel: a save from
+  // another worker would overwrite the preset. The settings endpoint is therefore served from this test:
+  // Save is captured, and the next load returns what was saved.
+  let saved = null as Record<string, any> | null
+  await page.route('**/api/ui_settings/', async (route) => {
+    if (route.request().method() === 'POST') {
+      saved = route.request().postDataJSON().settings
+      await route.fulfill({ json: { success: true } })
+    } else if (saved) {
+      const json = await (await route.fetch()).json()
+      await route.fulfill({ json: { ...json, settings: saved } })
+    } else {
+      await route.continue()
+    }
+  })
+
   // Navigation bar colour in light mode per preset: the other presets use their own bar colour,
   // Classic keeps the user's Theme Color (#9fbf2f in the e2e backend's seed).
   const presets = [
@@ -76,16 +92,11 @@ test('should preview, save and restore the theme preset', async ({ page }) => {
   await save.scrollIntoViewIfNeeded()
   await save.click()
   await expect(save).toBeDisabled()
+  expect(saved?.theme?.preset).toBe('slate')
   await page.reload()
   await expect(html).toHaveAttribute('data-pngx-theme', 'slate')
   await expect(page.getByRole('radio', { name: /^Slate/ })).toHaveAttribute(
     'aria-checked',
     'true'
   )
-
-  // Restore the default so other tests see the stock look.
-  await page.getByRole('radio', { name: /^Refined/ }).click()
-  await save.scrollIntoViewIfNeeded()
-  await save.click()
-  await expect(save).toBeDisabled()
 })
